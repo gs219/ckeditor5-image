@@ -40,34 +40,34 @@ import { insertImage, isImageAllowed } from '../image/utils';
  * @extends module:core/command~Command
  */
 export default class ImageUploadCommand extends Command {
-	/**
-	 * @inheritDoc
-	 */
-	refresh() {
-		this.isEnabled = isImageAllowed( this.editor.model );
-	}
+  /**
+   * @inheritDoc
+   */
+  refresh() {
+    this.isEnabled = isImageAllowed( this.editor.model );
+  }
 
-	/**
-	 * Executes the command.
-	 *
-	 * @fires execute
-	 * @param {Object} options Options for the executed command.
-	 * @param {File|Array.<File>} options.file The image file or an array of image files to upload.
-	 */
-	execute( options ) {
-		const editor = this.editor;
-		const model = editor.model;
+  /**
+   * Executes the command.
+   *
+   * @fires execute
+   * @param {Object} options Options for the executed command.
+   * @param {File|Array.<File>} options.file The image file or an array of image files to upload.
+   */
+  execute( options ) {
+    const editor = this.editor;
+    const model = editor.model;
 
-		const fileRepository = editor.plugins.get( FileRepository );
+    const fileRepository = editor.plugins.get( FileRepository );
 
-		model.change( writer => {
-			const filesToUpload = Array.isArray( options.file ) ? options.file : [ options.file ];
+    model.change( writer => {
+      const filesToUpload = Array.isArray(options.file) ? options.file : [ options.file ];
 
-			for ( const file of filesToUpload ) {
-				uploadImage( writer, model, fileRepository, file );
-			}
-		} );
-	}
+      for ( const file of filesToUpload ) {
+        uploadImage( writer, model, fileRepository, file );
+      }
+    } );
+  }
 }
 
 // Handles uploading single file.
@@ -76,12 +76,12 @@ export default class ImageUploadCommand extends Command {
 // @param {module:engine/model/model~Model} model
 // @param {File} file
 function uploadImage( writer, model, fileRepository, file ) {
-	const loader = fileRepository.createLoader( file );
+  const loader = fileRepository.createLoader( file );
 
-	// Do not throw when upload adapter is not set. FileRepository will log an error anyway.
-	if ( !loader ) {
-		return;
-	}
+  // Do not throw when upload adapter is not set. FileRepository will log an error anyway.
+  if ( !loader ) {
+    return;
+  }
 
-	insertImage( writer, model, { uploadId: loader.id } );
+  insertImage( writer, model, { uploadId: loader.id } );
 }
